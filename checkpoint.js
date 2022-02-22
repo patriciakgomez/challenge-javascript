@@ -33,7 +33,10 @@ const {
 // < 16
 
 function exponencial(exp) {
-
+    return function (number){
+        return Math.pow(number,exp)
+    }
+    //return (num) --> Math.pow(number,exp);
 }
 
 // ----- Recursión -----
@@ -69,9 +72,21 @@ function exponencial(exp) {
 // haciendo los movimientos SUR->ESTE->NORTE
 // Aclaraciones: el segundo parametro que recibe la funcion ('direccion') puede ser pasado vacio (null)
 
-function direcciones(laberinto) {
-
+function direcciones(laberinto, dir='') {
+    if (!laberinto) return dir;
+    for(let el in laberinto){
+        if(laberinto[el]!=='pared'){
+            dir+=el;
+            if (laberinto[el]!=='destino'){
+                return direcciones(laberinto[el], dir);
+            } else{
+            return dir;
+            }
+        }
+    }
+    return dir;
 }
+
 
 
 // EJERCICIO 3
@@ -91,6 +106,26 @@ function deepEqualArrays(arr1, arr2) {
 
 }
 
+
+
+
+
+
+
+function deepEqualArrays(array1, array2,bandera = true) {
+
+    if(array1.length !== array2.length) bandera = false;
+
+    for( i = 0 ; i < array1.length ; i++){
+        if(array1[i] !== array2[i]){
+            if(array1[i] instanceof Array && array2[i] instanceof Array){
+                return deepEqualArrays(array1[i],array2[i],bandera)
+            }
+            bandera = false;
+        }
+    }
+    return bandera;
+}
 
 
 // ----- LinkedList -----

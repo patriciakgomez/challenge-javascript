@@ -21,19 +21,19 @@ describe('Practica del Checkpoint M1', function(){
         let sqrt = exponencial(2);
         let e4 = exponencial(4);
         let e3 = exponencial(3);
-        xit('La funcion hija debe de elevar al cuadrado, si 2 le es pasado como parametro a la funcion padre', function() {
+        it('La funcion hija debe de elevar al cuadrado, si 2 le es pasado como parametro a la funcion padre', function() {
             expect(typeof sqrt).to.be.equal('function');
             expect(sqrt(2)).to.be.equal(4);
             expect(sqrt(3)).to.be.equal(9);
             expect(sqrt(4)).to.be.equal(16);
         });
-        xit('La funcion hija debe de elevar al cubo, si 3 le es pasado como parametro a la funcion padre', function() {
+        it('La funcion hija debe de elevar al cubo, si 3 le es pasado como parametro a la funcion padre', function() {
             expect(typeof e3).to.be.equal('function');
             expect(e3(2)).to.be.equal(8);
             expect(e3(3)).to.be.equal(27);
             expect(e3(4)).to.be.equal(64);
         });
-        xit('La funcion hija debe de elevar a 4, si 4 le es pasado como parametro a la funcion padre', function() {
+        it('La funcion hija debe de elevar a 4, si 4 le es pasado como parametro a la funcion padre', function() {
             expect(typeof e4).to.be.equal('function');
             expect(e4(2)).to.be.equal(16);
             expect(e4(3)).to.be.equal(81);
@@ -77,13 +77,13 @@ describe('Practica del Checkpoint M1', function(){
                 }, E: 'pared', O: 'pared'
             }, O: 'pared'
         }
-        xit("Si no se le pasa un laberinto debe retornar ''", function() {
+        it("Si no se le pasa un laberinto debe retornar ''", function() {
             expect(direcciones()).to.be.equal('');
         });
-        xit("Si se le pasa un laberinto sin destino debe retornar ''", function() {
+        it("Si se le pasa un laberinto sin destino debe retornar ''", function() {
             expect(direcciones({N:'pared', S:'pared', E:'pared', O:'pared'})).to.be.equal('');
         });
-        xit("Debe encontrar el destino dentro del laberinto y retornar los movimientos", function() {
+        it("Debe encontrar el destino dentro del laberinto y retornar los movimientos", function() {
             expect(direcciones(lab1)).to.be.equal('SOS');
             expect(direcciones(lab2)).to.be.equal('ESONOSE');
             expect(direcciones(lab3)).to.be.equal('ESOSEE');
