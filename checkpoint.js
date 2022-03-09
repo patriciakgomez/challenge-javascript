@@ -33,8 +33,8 @@ const {
 // < 16
 
 function exponencial(exp) {
-    return function (number){
-        return Math.pow(number,exp)
+    return function (number) {
+        return Math.pow(number, exp)
     }
     //return (num) --> Math.pow(number,exp);
 }
@@ -72,15 +72,15 @@ function exponencial(exp) {
 // haciendo los movimientos SUR->ESTE->NORTE
 // Aclaraciones: el segundo parametro que recibe la funcion ('direccion') puede ser pasado vacio (null)
 
-function direcciones(laberinto, dir='') {
+function direcciones(laberinto, dir = '') {
     if (!laberinto) return dir;
-    for(let el in laberinto){
-        if(laberinto[el]!=='pared'){
-            dir+=el;
-            if (laberinto[el]!=='destino'){
+    for (let el in laberinto) {
+        if (laberinto[el] !== 'pared') {
+            dir += el;
+            if (laberinto[el] !== 'destino') {
                 return direcciones(laberinto[el], dir);
-            } else{
-            return dir;
+            } else {
+                return dir;
             }
         }
     }
@@ -103,30 +103,13 @@ function direcciones(laberinto, dir='') {
 // deepEqualArrays([0,1,[[0,1,2],1,2]], [0,1,[[0,1,2],1,2]]) => true
 
 function deepEqualArrays(arr1, arr2) {
-
-}
-
-
-
-
-
-
-
-function deepEqualArrays(array1, array2,bandera = true) {
-
-    if(array1.length !== array2.length) bandera = false;
-
-    for( i = 0 ; i < array1.length ; i++){
-        if(array1[i] !== array2[i]){
-            if(array1[i] instanceof Array && array2[i] instanceof Array){
-                return deepEqualArrays(array1[i],array2[i],bandera)
-            }
-            bandera = false;
-        }
+    if (arr1.length !== arr2.length) return false;
+    for (let i = 0; i < arr1.length; i++) {
+        if (arr1[i] !== arr2[i]) return false;
+        if (Array.isArray(arr1)) return deepEqualArrays(arr1[i], arr2[i])
     }
-    return bandera;
+    return true;
 }
-
 
 // ----- LinkedList -----
 
@@ -145,12 +128,12 @@ function OrderedLinkedList() {
 // notar que Node esta implementado en el archivo DS
 
 // Y el metodo print que permite visualizar la lista:
-OrderedLinkedList.prototype.print = function(){
+OrderedLinkedList.prototype.print = function () {
     let print = 'head'
     let pointer = this.head
     while (pointer) {
         print += ' --> ' + pointer.value
-        pointer = pointer.next;
+        pointer5 = pointer.next;
     }
     print += ' --> null'
     return print
@@ -173,10 +156,26 @@ OrderedLinkedList.prototype.print = function(){
 // > LL.print()
 // < 'head --> 5 --> 3 --> 1 --> null'
 //               4
-OrderedLinkedList.prototype.add = function(val){
-    
+OrderedLinkedList.prototype.add = function (val) {
+    if (!this.head) {
+        this.head = new Node(val);
+    } else {
+        let current = this.head, temp = null;
+        if (current.value < val) {
+            temp = current;
+            this.head = new Node(val);
+            this.head.next = temp;
+        } else {
+            while (current.next && current.next.value > val) {
+                current = current.next;
+            }
+            temp = current.next;
+            current.next = new Node(val);
+            current = current.next;
+            current.next = temp;
+        }
+    }
 }
-
 
 // EJERCICIO 5
 // Crea el metodo 'removeHigher' que deve devolver el valor mas alto de la linked list 
@@ -193,8 +192,32 @@ OrderedLinkedList.prototype.add = function(val){
 // > LL.removeHigher()
 // < null
 
-OrderedLinkedList.prototype.removeHigher = function(){
-    
+OrderedLinkedList.prototype.removeHigher = function () {
+    // si esta vacia
+    if (!this.head) return null;
+    /*let current = this.head.next, higher = this.head.value, prev = null, higherNext = null;
+    //recorro buscando el mayor
+    while (current) {
+        if (current.value > higher) {
+            higher = current.value;
+            higherNext = current.next;
+            prev = current;
+        }
+        current = current.next;
+    }
+    //elimino el mayor
+    if (higher === this.head.value) {
+        this.head = this.head.next
+    } else {
+        prev = higherNext;
+    }*/
+    let higher = this.head.value;
+    if (!this.head.next) {
+        this.head = null;
+    } else {
+        this.head = this.head.next;
+    }
+    return higher;
 }
 
 
@@ -213,8 +236,36 @@ OrderedLinkedList.prototype.removeHigher = function(){
 // > LL.removeHigher()
 // < null
 
-OrderedLinkedList.prototype.removeLower = function(){
-    
+OrderedLinkedList.prototype.removeLower = function () {
+    // si esta vacia
+    if (!this.head) return null;
+    /*/////////OTRA OPCION//////
+    //ordeno de menor a mayor y elimino el Head
+    let current = this.head, index = null, temp;
+    while (current != null) {
+        index = current.next;
+        while (index != null) {
+            if (current.value > index.value) {
+                temp = current.value;
+                current.value = index.value;
+                index.value = temp;
+            }
+            index = index.next;
+        }
+        current = current.next;
+    }*/
+    if (!this.head.next) {
+        temp = this.head.value;
+        this.head = null;
+        return temp;
+    }
+    let current = this.head;
+    while (current.next.next) {
+        current = current.next;
+    }
+    temp = current.next.value;
+    current.next = null;
+    return temp;
 }
 
 
@@ -246,8 +297,26 @@ OrderedLinkedList.prototype.removeLower = function(){
 // > multiCallbacks(cbs1, cbs2);
 // < ["2-1", "1-1", "1-2", "2-2"];
 
-function multiCallbacks(cbs1, cbs2){
-    
+function multiCallbacks(cbs1, cbs2) {
+    var array = [], newCb = [];
+    //concateno los arrays de objetos en un nuevo array
+    newCb = cbs1.concat(cbs2)
+    //recorro el nuevo array y ordeno con bubble de menor a mayor
+    for (let i = 0; i < newCb.length; i++) {
+        for (let j = 0; j < (newCb.length - i - 1); j++) {
+            if (newCb[j].time > newCb[j + 1].time) {
+                let tmp = newCb[j];
+                newCb[j] = newCb[j + 1];
+                newCb[j + 1] = tmp;
+            }
+        }
+    }
+    //Recorro el array ordenado y pusheo el return de cada funcion CB 
+    for (let el of newCb) {
+        array.push(el.cb());
+    }
+    //Retorno el array con los return de cada CB
+    return array;
 }
 
 
@@ -265,10 +334,18 @@ function multiCallbacks(cbs1, cbs2){
 // 5   9
 // resultado:[5,8,9,32,64]
 
-BinarySearchTree.prototype.toArray = function() {
-    
+BinarySearchTree.prototype.toArray = function () {
+    if (this !== null) {
+        let arr = [];
+        function inOrder(current) {
+            current.left && inOrder(current.left);
+            arr.push(current.value);
+            current.right && inOrder(current.right);
+        }
+        inOrder(this)
+        return arr;
+    }
 }
-
 
 
 // ----- Algoritmos -----
@@ -285,7 +362,14 @@ BinarySearchTree.prototype.toArray = function() {
 // informarse sobre algoritmos, leerlos de un pseudocodigo e implemnterlos alcanzara
 
 function primalityTest(n) {
-    
+    if (n <= 3) return n > 1;
+    if ((n % 2 === 0) || (n % 3 === 0)) return false;
+    let count = 5;
+    while (Math.pow(count, 2) <= n) {
+        if (n % count === 0 || n % (count + 2) === 0) return false;
+        count += 6;
+    }
+    return true;
 }
 
 
@@ -294,9 +378,21 @@ function primalityTest(n) {
 // retorn el mismo ordenado de 'mayor a menor!'
 // https://en.wikipedia.org/wiki/Quicksort
 
-function quickSort(array) {
-    
+function quickSort(arr) {
+    if (arr.length < 2) return arr;
+    var pivot = arr[0], left = [], right = [];
+    for (let i = 1; i < arr.length; i++) {
+        if (arr[i] < pivot) {
+            left.push(arr[i]);
+        }
+        else {
+            right.push(arr[i])
+        }
+    }
+    return [...quickSort(right), pivot, ...quickSort(left)];
 }
+
+
 // QuickSort ya lo conocen solo que este 
 // ordena de mayor a menor
 // para esto hay que unir como right+mid+left o cambiar el 
@@ -317,9 +413,17 @@ function quickSort(array) {
 // > reverse(95823);
 // < 32859
 
-function reverse(num){
-    
+function reverse(num) {
+    var numRev=0;
+    while (num!=0){
+        numRev*=10;
+        numRev+=num%10;
+        num -= num % 10;
+        num /= 10;
+    }
+    return numRev;
 }
+
 // la grandiosa resolucion de Wilson!!!
 // declaran una variable donde 
 // almacenar el el numero invertido
